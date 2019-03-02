@@ -1,0 +1,33 @@
+name: landowpbase
+recipe: wordpress
+config:
+  webroot: .
+  php: '7.2'
+  database: mysql:5.7
+services:
+  node:
+    type: node:6.12
+  #  build:
+  #    - "cd /app/wp-content/themes/<custom_theme> && npm install"
+tooling:
+  core:
+    service: appserver
+    description: Downloads WordPress core
+    cmd: wp core download
+  set:
+    service: appserver
+    description: Creates a wp-config file
+    cmd: cp /app/lando_config/wp-config.php /app/
+  #watch:
+  #  service: node
+  #  description: Watches and compiles theme assets
+  #  cmd: npm start --prefix /app/wp-content/themes/<custom_theme>
+  #compile:
+  #  service: node
+  #  description: Compiles theme assets for deploy
+  #  cmd: npm run gulp --prefix /app/wp-content/themes/<custom_theme>
+events:
+  post-set:
+    - echo "Created a wp-config file. Now you may import the db using 'lando db-import <filename>'."
+  post-db-import:
+    - appserver: cd $LANDO_WEBROOT && wp rewrite flush
