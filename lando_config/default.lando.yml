@@ -1,5 +1,6 @@
-name: landowpbase
+name: landowpbase # Change to your project name
 recipe: wordpress
+# Update config below to match your project's production server
 config:
   webroot: .
   php: '7.2'
